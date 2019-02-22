@@ -14,12 +14,13 @@ public class Message implements Serializable {
     private String sender;
     private String type;
     // Image is transient means that we have to provide our own code to read/write object
-    private String data1;
+    private String text;
     private transient Image data2;
     // private transient Media data3;
 
-    Message(String who, Image what) {
+    Message(String who, String quote, Image what) {
         sender = who;
+        text = quote;
         data2 = what;
     }
 

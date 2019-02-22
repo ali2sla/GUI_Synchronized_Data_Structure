@@ -51,7 +51,7 @@ public class WebChatController {
         connected = false;
 
         // Create and start the GUI updater thread
-        UpdateGUI updater = new UpdateGUI(Queue, UserOneText, UserOneImage, UserOneMedia, TheChat, yourNameText);
+        UpdateGUI updater = new UpdateGUI(inQueue, UserOneText, UserOneImage, UserOneMedia, TheChat, yourNameText);
         Thread updaterThread = new Thread(updater);
         updaterThread.start();
         //GUI Updates text, image, and file to either people.
@@ -166,14 +166,21 @@ public class WebChatController {
     }
 
     public void SendUserOne() {
-        Image userOneImg = UserOneImage.getImage();
+        Message message = new Message(yourNameText.getText(), UserOneText.getText(), UserOneImage.getImage());
+        boolean putSucceeded = outQueue.put(message);
+        while (!putSucceeded) {
+            Thread.currentThread().yield();
+            putSucceeded = outQueue.put(message);
+        }
+
+        /*Image userOneImg = UserOneImage.getImage();
         if (userOneImg != null) {
-            while (!Queue.put(userOneImg)) {
+            while (!outQueue.put(userOneImg)) {
                 Thread.currentThread().yield();
             }
         } else {
             String empty = "E.M.P.T.Y";
-            while (!Queue.put(empty)) {
+            while (!outQueue.put(empty)) {
                 Thread.currentThread().yield();
             }
         }
@@ -181,12 +188,12 @@ public class WebChatController {
 
         MediaPlayer userOneMed = UserOneMedia.getMediaPlayer();
         if (userOneMed != null) {
-            while (!Queue.put(userOneMed)) {
+            while (!outQueue.put(userOneMed)) {
                 Thread.currentThread().yield();
             }
         } else {
             String empty = "E.M.P.T.Y";
-            while (!Queue.put(empty)) {
+            while (!outQueue.put(empty)) {
                 Thread.currentThread().yield();
             }
         }
@@ -197,15 +204,15 @@ public class WebChatController {
         UserOneText.setText("");
 
         if (userOneText != null) {
-            while (!Queue.put(userOneText)) {
+            while (!outQueue.put(userOneText)) {
                 Thread.currentThread().yield();
             }
         } else {
             String empty = "E.M.P.T.Y";
-            while (!Queue.put(empty)) {
+            while (!outQueue.put(empty)) {
                 Thread.currentThread().yield();
             }
         }
-        System.out.println("SendMessage: PUT " + userOneText);
+        System.out.println("SendMessage: PUT " + userOneText);*/
     }
 }
